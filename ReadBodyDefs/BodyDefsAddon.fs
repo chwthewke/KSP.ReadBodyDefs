@@ -95,7 +95,7 @@ module DataFormat =
             |> (fun s -> s + "getAtmosphere _ = Nothing\n")
 
     let PrintPhysicalAttrs : Bodies.BodyData list -> Bodies.BodyData -> string = fun bs b ->
-        sprintf "getPhysicalAttrs %s = mkPhysicalAttrs %.0f %.3f %.7e\n" (FmtName bs b) b.Radius b.RotationPeriod b.GravitationalParameter
+        sprintf "getPhysicalAttrs %s = mkPhysicalAttrs %9.0f %12.3f %9.7e\n" (FmtName bs b) b.Radius b.RotationPeriod b.GravitationalParameter
 
     let PrintAllPhysicalAttrs : Bodies.BodyData list -> string = fun bs ->
         bs |> List.map (PrintPhysicalAttrs bs) |> String.concat ""
@@ -108,7 +108,7 @@ module DataFormat =
         bs |> List.map (PrintSphereOfInfluence bs) |> String.concat ""
 
     let PrintColor : Bodies.BodyData list -> Bodies.BodyData -> string = fun bs b ->
-        let PrintColor' : Color option -> string = Utils.cata (fun c -> sprintf "Just $ RgbaFColor %f %f %f %f" c.r c.g c.b c.a) "Nothing"
+        let PrintColor' : Color option -> string = Utils.cata (fun c -> sprintf "Just $ RgbaColor %f %f %f %f" c.r c.g c.b c.a) "Nothing"
         in b.Orbit |> Option.map (fun o -> o.OrbitColor) |> PrintColor' |> sprintf "getColor %s = %s\n" (FmtName bs b)
 
     let PrintAllColor : Bodies.BodyData list -> string = fun bs ->
